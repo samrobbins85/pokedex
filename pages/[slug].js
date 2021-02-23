@@ -9,8 +9,7 @@ export default function Pokemon() {
         `https://pokeapi.co/api/v2/pokemon/${slug}`,
         fetcher
     );
-    if (error) {
-        return <Error statusCode={404} />;
-    }
-    return <p>{data.name}</p>;
+    if (error) return <Error statusCode={404} />;
+    if (!data) return <div>loading...</div>;
+    return <div>{data.name}!</div>;
 }
