@@ -2,10 +2,12 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import Error from "next/error";
 import Description from "../components/description";
-import type from "../components/type";
+import background from "../lib/background";
+import text from "../lib/text";
 import Head from "next/head";
 import Stat from "../components/stat";
 import Link from "next/link";
+import Home from "../components/svg/home";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function Pokemon() {
@@ -30,39 +32,30 @@ export default function Pokemon() {
             <div className="pt-4 pl-4">
                 <Link href="/">
                     <a className="text-gray-600 hover:text-black focus:text-black">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            className="h-10 w-10 inline-block"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                            />
-                        </svg>
+                        <Home className="h-10 w-10 inline-block" />
                         <span className="text-2xl align-middle">Home</span>
                     </a>
                 </Link>
             </div>
             <div className="pt-4">
-                <div className="grid justify-center sm:border sm:w-3/4 md:w-1/2 lg:w-1/4 mx-auto">
-                    <h1 className="text-center capitalize text-4xl font-semibold">
+                <div className="grid sm:border max-w-md mx-auto">
+                    <h1 className="px-4 capitalize text-4xl font-semibold py-4">
                         {data.name}
                     </h1>
 
-                    <div className="flex gap-x-2 px-2">
+                    <div className="flex px-4 flex-wrap">
                         {data.types.map((x) => (
                             <div
-                                className={`rounded-xl px-2 py-1 ${type(
+                                className={`rounded-xl px-2 mx-1 my-1 py-1 ${background(
                                     x.type.name
                                 )}`}
                                 key={x.type.name}
                             >
-                                <span className="capitalize">
+                                <span
+                                    className={`capitalize font-medium ${text(
+                                        x.type.name
+                                    )}`}
+                                >
                                     {x.type.name}
                                 </span>
                             </div>

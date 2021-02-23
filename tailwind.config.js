@@ -4,6 +4,7 @@ module.exports = {
     purge: [
         "./components/**/*.{js,ts,jsx,tsx}",
         "./pages/**/*.{js,ts,jsx,tsx}",
+        "./lib/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         extend: {
@@ -18,6 +19,7 @@ module.exports = {
                 orange: colors.orange,
                 cyan: colors.cyan,
                 teal: colors.teal,
+                fuchsia: colors.fuchsia,
             },
         },
     },

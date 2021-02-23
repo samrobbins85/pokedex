@@ -70,25 +70,35 @@ export default function IndexPage({ all }) {
                             ))}
                 </div>
                 {!search && (
-                    <div className="flex justify-around py-4">
-                        <button
-                            disabled={pageIndex === 0}
-                            className="px-4 py-2 border hover:bg-gray-100"
-                            onClick={previous}
-                        >
-                            Previous
-                        </button>
-                        <span>
-                            Page {pageIndex / 20 + 1} of{" "}
-                            {Math.ceil(all.count / 20)}
-                        </span>
-                        <button
-                            disabled={pageIndex + 20 > all.count}
-                            className="px-4 py-2 border hover:bg-gray-100"
-                            onClick={next}
-                        >
-                            Next
-                        </button>
+                    <div className="flex justify-center">
+                        <div className="py-4">
+                            <button
+                                disabled={pageIndex === 0}
+                                className={`px-4 py-2 w-32 border  ${
+                                    pageIndex === 0
+                                        ? "opacity-60"
+                                        : "hover:bg-gray-100"
+                                }`}
+                                onClick={previous}
+                            >
+                                Previous
+                            </button>
+                            <span className="mx-4">
+                                Page {pageIndex / 20 + 1} of{" "}
+                                {Math.ceil(all.count / 20)}
+                            </span>
+                            <button
+                                disabled={pageIndex + 20 > all.count}
+                                className={`px-4 py-2 w-32 border  ${
+                                    pageIndex + 20 > all.count
+                                        ? "opacity-50"
+                                        : "hover:bg-gray-100"
+                                }`}
+                                onClick={next}
+                            >
+                                Next
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>
