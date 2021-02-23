@@ -1,7 +1,11 @@
 import "../styles/index.css";
-
+import { SSRProvider } from "@react-aria/ssr";
 function MyApp({ Component, pageProps }) {
-	return <Component {...pageProps} />;
+    return (
+        <SSRProvider>
+            <Component {...pageProps} />
+        </SSRProvider>
+    );
 }
 
 export default MyApp;

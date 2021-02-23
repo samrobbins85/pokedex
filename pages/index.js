@@ -1,9 +1,11 @@
 import Head from "next/head";
 import useSWR from "swr";
 import { useState } from "react";
-import Link from "next/link";
 import Fuse from "fuse.js";
 import HomeCard from "../components/home_card";
+import Card_Loading from "../components/card_loading";
+import SearchField from "../components/search";
+
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function IndexPage({ all }) {
@@ -20,12 +22,11 @@ export default function IndexPage({ all }) {
         }
     }
     function next() {
-        if (pageIndex + 20 < data.count) {
+        if (pageIndex + 20 < all.count) {
             setPageIndex(pageIndex + 20);
         }
     }
 
-    // if (data) {
     const options = {
         includeScore: true,
         keys: ["name"],
@@ -33,44 +34,37 @@ export default function IndexPage({ all }) {
 
     const fuse = new Fuse(all.results, options);
 
-    //     console.log(fuse.search("char"));
-    // }
-
     return (
         <>
             <Head>
-                <title>Next.js Template</title>
-                <meta
-                    name="Description"
-                    content="A template Next.js application"
-                />
+                <title>Pokedex</title>
+                <meta name="Description" content="A pokedex for pokemon" />
             </Head>
             <div>
                 <h1 className="py-4 text-center text-5xl font-semibold">
-                    Pokedex!!{" "}
+                    Pokedex
                 </h1>
                 <div className="flex justify-center py-4">
-                    <input
-                        type="text"
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
+                    <SearchField
+                        label="Search"
+                        placeholder="Search for a pokemon"
+                        onChange={(event) => setSearch(event)}
                     />
                 </div>
-                <div className="grid justify-items-center grid-cols-4 gap-y-4">
+                <div className="grid justify-items-center sm:grid-cols-2 md:grid-cols-5 gap-y-4 gap-x-24 px-8 py-4">
                     {data &&
                         !search &&
                         data.results.map((x) => (
                             <HomeCard key={x.name} item={x} />
                         ))}
                     {!data &&
-                        [...Array(20)].map((e, i) => (
-                            <div className="border w-1/2 h-32" key={i}></div>
-                        ))}
+                        [...Array(20)].map((_, i) => <Card_Loading key={i} />)}
 
                     {data &&
                         search &&
                         fuse
                             .search(search)
+                            .filter((y) => y.score < 0.1)
                             .map((x) => (
                                 <HomeCard key={x.item.name} item={x.item} />
                             ))}
@@ -78,6 +72,7 @@ export default function IndexPage({ all }) {
                 {!search && (
                     <div className="flex justify-around py-4">
                         <button
+                            disabled={pageIndex === 0}
                             className="px-4 py-2 border hover:bg-gray-100"
                             onClick={previous}
                         >
@@ -85,9 +80,10 @@ export default function IndexPage({ all }) {
                         </button>
                         <span>
                             Page {pageIndex / 20 + 1} of{" "}
-                            {data && Math.ceil(data.count / 20)}
+                            {Math.ceil(all.count / 20)}
                         </span>
                         <button
+                            disabled={pageIndex + 20 > all.count}
                             className="px-4 py-2 border hover:bg-gray-100"
                             onClick={next}
                         >
