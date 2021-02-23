@@ -2,15 +2,17 @@ import Head from "next/head";
 import useSWR from "swr";
 import { useState } from "react";
 import Link from "next/link";
+import Fuse from "fuse.js";
+import HomeCard from "../components/home_card";
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function IndexPage() {
+export default function IndexPage({ all }) {
     const [pageIndex, setPageIndex] = useState(0);
+    const [search, setSearch] = useState("");
     const { data } = useSWR(
         `https://pokeapi.co/api/v2/pokemon/?offset=${pageIndex}`,
         fetcher
     );
-    // console.log(data);
 
     function previous() {
         if (pageIndex >= 20) {
@@ -22,6 +24,17 @@ export default function IndexPage() {
             setPageIndex(pageIndex + 20);
         }
     }
+
+    // if (data) {
+    const options = {
+        includeScore: true,
+        keys: ["name"],
+    };
+
+    const fuse = new Fuse(all.results, options);
+
+    //     console.log(fuse.search("char"));
+    // }
 
     return (
         <>
@@ -36,40 +49,65 @@ export default function IndexPage() {
                 <h1 className="py-4 text-center text-5xl font-semibold">
                     Pokedex!!{" "}
                 </h1>
+                <div className="flex justify-center py-4">
+                    <input
+                        type="text"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                    />
+                </div>
                 <div className="grid justify-items-center grid-cols-4 gap-y-4">
-                    {data
-                        ? data.results.map((x) => (
-                              <Link key={x.name} href={"/" + x.name}>
-                                  <a className="w-1/2">
-                                      <div className="border h-32 ">
-                                          <span>{x.name}</span>
-                                      </div>
-                                  </a>
-                              </Link>
-                          ))
-                        : [...Array(20)].map((e, i) => (
-                              <div className="border w-1/2 h-32" key={i}></div>
-                          ))}
+                    {data &&
+                        !search &&
+                        data.results.map((x) => (
+                            <HomeCard key={x.name} item={x} />
+                        ))}
+                    {!data &&
+                        [...Array(20)].map((e, i) => (
+                            <div className="border w-1/2 h-32" key={i}></div>
+                        ))}
+
+                    {data &&
+                        search &&
+                        fuse
+                            .search(search)
+                            .map((x) => (
+                                <HomeCard key={x.item.name} item={x.item} />
+                            ))}
                 </div>
-                <div className="flex justify-around py-4">
-                    <button
-                        className="px-4 py-2 border hover:bg-gray-100"
-                        onClick={previous}
-                    >
-                        Previous
-                    </button>
-                    <span>
-                        Page {pageIndex / 20 + 1} of{" "}
-                        {data && Math.ceil(data.count / 20)}
-                    </span>
-                    <button
-                        className="px-4 py-2 border hover:bg-gray-100"
-                        onClick={next}
-                    >
-                        Next
-                    </button>
-                </div>
+                {!search && (
+                    <div className="flex justify-around py-4">
+                        <button
+                            className="px-4 py-2 border hover:bg-gray-100"
+                            onClick={previous}
+                        >
+                            Previous
+                        </button>
+                        <span>
+                            Page {pageIndex / 20 + 1} of{" "}
+                            {data && Math.ceil(data.count / 20)}
+                        </span>
+                        <button
+                            className="px-4 py-2 border hover:bg-gray-100"
+                            onClick={next}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     );
+}
+export async function getStaticProps() {
+    const count = await fetch("https://pokeapi.co/api/v2/pokemon/");
+    const count_json = await count.json();
+    const all_req = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/?limit=${count_json.count}`
+    );
+    const all = await all_req.json();
+
+    return {
+        props: { all },
+    };
 }
