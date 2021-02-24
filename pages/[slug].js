@@ -13,7 +13,7 @@ export default function Pokemon() {
     const router = useRouter();
     const { slug } = router.query;
     const { data, error } = useSWR(
-        `https://pokeapi.co/api/v2/pokemon/${slug}`,
+        slug ? `https://pokeapi.co/api/v2/pokemon/${slug}` : null,
         fetcher
     );
     if (error) return <Error statusCode={404} />;
