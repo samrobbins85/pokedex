@@ -6,10 +6,14 @@ export default function HomeCard({ item }) {
                 <div className="border h-36 grid justify-center ">
                     <div className="h-20 w-24 my-2 relative">
                         <img
-                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${
                                 item.url.split("/").reverse()[1]
                             }.png`}
                             alt={item.name}
+                            onError={(e) =>
+                                (e.target.src =
+                                    "https://pngimg.com/uploads/pokeball/pokeball_PNG8.png")
+                            }
                         />
                     </div>
                     <span className="text-center capitalize h-8 my-2">
