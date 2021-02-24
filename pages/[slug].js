@@ -55,6 +55,8 @@ export default function Pokemon() {
                                 .front_default !== null
                                 ? data.sprites.other["official-artwork"]
                                       .front_default
+                                : data.sprites.front_default
+                                ? data.sprites.front_default
                                 : "https://pngimg.com/uploads/pokeball/pokeball_PNG8.png"
                         }
                         alt={data.name}

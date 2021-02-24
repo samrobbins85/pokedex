@@ -8,7 +8,7 @@ export default function SearchField(props) {
     let { labelProps, inputProps } = useSearchField(props, state, ref);
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", width: 200 }}>
+        <div className="flex flex-col">
             <label {...labelProps}>{label}</label>
             <input {...inputProps} ref={ref} />
         </div>
