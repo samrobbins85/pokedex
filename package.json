@@ -12,7 +12,7 @@
 		"@react-aria/ssr": "^3.0.1",
 		"@react-stately/searchfield": "^3.1.1",
 		"@tailwindcss/forms": "^0.2.1",
-		"autoprefixer": "^10.2.4",
+		"autoprefixer": "^10.2.5",
 		"fuse.js": "^6.4.6",
 		"next": "^10.0.8",
 		"postcss": "^8.2.8",
